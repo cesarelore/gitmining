@@ -19,7 +19,9 @@ public class StatController {
     }
 
     @GetMapping("/{owner}/{repo}")
-    public List<Repo> getStats(@PathVariable String owner, @PathVariable String repo) {
-        return this.statService.findCommits(owner, repo);
+    public List<Stats> getStats(@PathVariable String owner, @PathVariable String repo) {
+        List<Repo> repoData = this.statService.findCommits(owner, repo);
+
+        return this.statService.getStats(repoData);
     }
 }
