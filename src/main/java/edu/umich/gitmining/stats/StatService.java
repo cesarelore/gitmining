@@ -8,19 +8,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StatService {
 
+    private final RestTemplate restTemplate;
+
+    public StatService(RestTemplateBuilder restTemplateBuilder) {
+        this.restTemplate = restTemplateBuilder
+            .basicAuthentication("username", "token")
+            .build();
+    }
+
     public List<Repo> findCommits(String owner, String repo) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Repo []> response = restTemplate.getForEntity(
-					"https://api.github.com/repos/" + owner + "/" + repo + "/commits", Repo[].class);
-            Repo[] repos = response.getBody();
-            
-            return List.of(repos);
+        List<Repo> commits = new ArrayList<Repo>();
+        int i=1;
+        
+        try {
+            ResponseEntity<Repo []> response = restTemplate
+                .getForEntity("https://api.github.com/repos/" + owner + "/" + repo + "/commits?per_page=100&page=" + i, Repo[].class);
+
+            while (response.hasBody()) {
+                commits.addAll(List.of(response.getBody()));
+                i++;
+                response = restTemplate
+                    .getForEntity("https://api.github.com/repos/" + owner + "/" + repo + "/commits?per_page=100&page=" + i, Repo[].class);
+            }
+        }
+        catch(Exception e) {}
+                                
+        return commits;
     }
 
     public List<Stats> getStats(List<Repo> repoData) {
