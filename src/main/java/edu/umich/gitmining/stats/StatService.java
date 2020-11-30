@@ -1,5 +1,8 @@
 package edu.umich.gitmining.stats;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -13,13 +16,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@PropertySource("classpath:application.properties")
 public class StatService {
 
     private final RestTemplate restTemplate;
 
-    public StatService(RestTemplateBuilder restTemplateBuilder) {
+    public StatService(RestTemplateBuilder restTemplateBuilder, @Value("${github.username:defaultUsername}") String gitUsername, @Value("${github.token:defaultToken}") String gitToken ) {
+        System.out.println("Github username for Rest Template: " + gitUsername);
         this.restTemplate = restTemplateBuilder
-            .basicAuthentication("username", "token")
+            .basicAuthentication(gitUsername, gitToken)
             .build();
     }
 
