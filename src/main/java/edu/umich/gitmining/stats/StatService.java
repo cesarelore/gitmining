@@ -1,5 +1,8 @@
 package edu.umich.gitmining.stats;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -8,19 +11,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@PropertySource("classpath:application.properties")
 public class StatService {
 
+    private final RestTemplate restTemplate;
+
+    public StatService(RestTemplateBuilder restTemplateBuilder, @Value("${github.username:defaultUsername}") String gitUsername, @Value("${github.token:defaultToken}") String gitToken ) {
+        System.out.println("Github username for Rest Template: " + gitUsername);
+        this.restTemplate = restTemplateBuilder
+            .basicAuthentication(gitUsername, gitToken)
+            .build();
+    }
+
     public List<Repo> findCommits(String owner, String repo) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Repo []> response = restTemplate.getForEntity(
-					"https://api.github.com/repos/" + owner + "/" + repo + "/commits", Repo[].class);
-            Repo[] repos = response.getBody();
-            
-            return List.of(repos);
+        List<Repo> commits = new ArrayList<Repo>();
+        int i=1;
+        
+        try {
+            ResponseEntity<Repo []> response = restTemplate
+                .getForEntity("https://api.github.com/repos/" + owner + "/" + repo + "/commits?per_page=100&page=" + i, Repo[].class);
+
+            while (response.hasBody()) {
+                commits.addAll(List.of(response.getBody()));
+                i++;
+                response = restTemplate
+                    .getForEntity("https://api.github.com/repos/" + owner + "/" + repo + "/commits?per_page=100&page=" + i, Repo[].class);
+            }
+        }
+        catch(Exception e) {}
+                                
+        return commits;
     }
 
     public List<Stats> getStats(List<Repo> repoData) {
