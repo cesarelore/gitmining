@@ -49,20 +49,21 @@ public class StatService {
     }
 
     public List<Stats> getStats(List<Repo> repoData) {
-        List<Commit> commits = repoData.stream().map(Repo::getCommit).collect(Collectors.toList());
-        List<Author> authors = commits.stream().map(Commit::getAuthor).collect(Collectors.toList());
-
-        Map<String, List<Author>> groupedCommits = authors.stream().collect(Collectors.groupingBy(Author::getName));
-        
-        List<Stats> stats = new ArrayList<Stats>();
-
-        groupedCommits.forEach((k,v) -> stats.add(Stats.builder()
-            .authorName(k)
-            .commitCount(v.size())
-            .firstCommit(v.stream().min(Comparator.comparing(Author::getDate)).get().getDate())
-            .lastCommit(v.stream().max(Comparator.comparing(Author::getDate)).get().getDate())
-            .build()));
-
-        return stats;
+        return null;
+        //        List<Commit> commits = repoData.stream().map(Repo::getCommit).collect(Collectors.toList());
+//        List<Author> authors = commits.stream().map(Commit::getAuthor).collect(Collectors.toList());
+//
+//        Map<String, List<Author>> groupedCommits = authors.stream().collect(Collectors.groupingBy(Author::getName));
+//
+//        List<Stats> stats = new ArrayList<Stats>();
+//
+//        groupedCommits.forEach((k,v) -> stats.add(Stats.builder()
+//            .authorName(k)
+//            .commitCount(v.size())
+//            .firstCommit(v.stream().min(Comparator.comparing(Author::getDate)).get().getDate())
+//            .lastCommit(v.stream().max(Comparator.comparing(Author::getDate)).get().getDate())
+//            .build()));
+//
+//        return stats;
     }
 }
