@@ -23,7 +23,6 @@ public class GitRestTestService {
     private final String ACCEPT_HEADER = "application/vnd.github+json";
     private final String GITHUB_ORG = "signalapp";
     private final String GITHUB_REPO = "Signal-Server";
-    private String testUrl;
 
     @Value("${github.username:username-missing}")
     private String githubUsername;
@@ -32,16 +31,14 @@ public class GitRestTestService {
     private String githubToken;
 
     public void makeTestCall() {
-        testUrl = "https://api.github.com/repos/" + GITHUB_ORG + "/" + GITHUB_REPO;
-
         restTemplate = new RestTemplate();
         headers = new HttpHeaders();
         headers.set("Authorization", "token " + githubToken);
         headers.set("User-Agent", "Mozilla/5.0 Firefox/26.0");
         entity = new HttpEntity<>(headers);
-        doContributorRestCall();
-        doCommitsRestCall();
-        doRepoRestCall();
+
+        String testUrl;
+        testUrl = "https://api.github.com/repos/" + GITHUB_ORG + "/" + GITHUB_REPO;
 
         // TODO: use list instead of single URL
         List<String> urlList = new ArrayList<>();
@@ -50,21 +47,34 @@ public class GitRestTestService {
         urlList.add("https://api.github.com/repos/waditu/tushare");
         urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii ");
         urlList.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
-//        urlList.add("https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100&page=1");
-//        urlList.add("https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100&page=2");
+
+        Repo r;
+        List<Contributor> contributorList;
+        List<Commits> commitsList;
+        for (String url : urlList) {
+            contributorList = doContributorRestCall(url);
+            commitsList = doCommitsRestCall(url);
+            r = doRepoRestCall(url);
+
+            // Do something with the results here.
+        }
+
+//        doContributorRestCall(testUrl);
+//        doCommitsRestCall(testUrl);
+//        doRepoRestCall(testUrl);
 
     }
 
-    private Repo doRepoRestCall() {
-        String localTestUrl = testUrl;
+    private Repo doRepoRestCall(String baseUrl) {
+        String localTestUrl = baseUrl;
         System.out.println("URL: " + localTestUrl);
         ResponseEntity<Repo> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Repo.class);
         Repo repoResult = response.getBody();
         System.out.println("Repo: " + repoResult.getName());
         return repoResult;
     }
-    private List<Contributor> doContributorRestCall() {
-        String localTestUrl = testUrl + "/contributors";
+    private List<Contributor> doContributorRestCall(String baseUrl) {
+        String localTestUrl = baseUrl + "/contributors";
         System.out.println("URL: " + localTestUrl);
         ResponseEntity<Contributor[]> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Contributor[].class);
         List<Contributor> contributorList = Arrays.asList(response.getBody());
@@ -73,8 +83,8 @@ public class GitRestTestService {
         return contributorList;
     }
 
-    private List<Commits> doCommitsRestCall() {
-        String localTestUrl = testUrl + "/commits?per_page=100";
+    private List<Commits> doCommitsRestCall(String baseUrl) {
+        String localTestUrl = baseUrl + "/commits?per_page=100";
         System.out.println("URL: " + localTestUrl);
 
         ResponseEntity<Commits[]> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Commits[].class); //must use restTemplate.exchange not restTemplate.getForEntity
