@@ -16,7 +16,7 @@ public class Contributor {
     public String type;
     public long contributions;
 
-    public String[] toStringArray() {
-        return new String[] {login, String.valueOf(contributions)};
+    public String[] toStringArray(String currentRepo) {
+        return new String[] {currentRepo, login, String.valueOf(contributions)};
     }
 }

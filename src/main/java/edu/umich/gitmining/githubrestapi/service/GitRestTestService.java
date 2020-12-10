@@ -55,22 +55,24 @@ public class GitRestTestService {
         repoListForcsv.add(new String[]{"id", "name", "watcher_count", "star_count"});
         Repo r;
         List<String[]> contributorListForcsv = new ArrayList<>();
-        contributorListForcsv.add(new String[]{"login", "contribution_count"});
+        contributorListForcsv.add(new String[]{"repo", "login", "contribution_count"});
         List<Contributor> contributorList;
         List<String[]> commitsListForcsv = new ArrayList<>();
-        commitsListForcsv.add(new String[]{"sha", "author", "committer"});
+        commitsListForcsv.add(new String[]{"repo", "sha", "author", "committer"});
         List<Commits> commitsList;
         for (String url : urlList) {
+            r = doRepoRestCall(url);
+            repoListForcsv.add(r.toStringArray());
+
             contributorList = doContributorRestCall(url);
             for(Contributor c : contributorList) {
-                contributorListForcsv.add(c.toStringArray());
+                contributorListForcsv.add(c.toStringArray(r.getName()));
             }
             commitsList = doCommitsRestCall(url);
             for (Commits commits : commitsList) {
-                commitsListForcsv.add(commits.toStringArray());
+                commitsListForcsv.add(commits.toStringArray(r.getName()));
             }
-            r = doRepoRestCall(url);
-            repoListForcsv.add(r.toStringArray());
+
             System.out.println();
 
         }
@@ -78,6 +80,7 @@ public class GitRestTestService {
         writeToCsv("repo.csv", repoListForcsv);
         writeToCsv("contributor.csv", contributorListForcsv);
         writeToCsv("commits.csv", commitsListForcsv);
+        System.out.println("\n\nDONE");
 
 //        doContributorRestCall(testUrl);
 //        doCommitsRestCall(testUrl);

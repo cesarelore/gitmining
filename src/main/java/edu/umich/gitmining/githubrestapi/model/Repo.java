@@ -22,6 +22,8 @@ public class Repo {
     private long size;
     private long stargazers_count;
     private long watchers_count;
+    private long network_count;
+    private long subscribers_count;
 
     public String getName() {
         return name;

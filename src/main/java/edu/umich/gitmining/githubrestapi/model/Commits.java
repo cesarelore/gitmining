@@ -19,8 +19,8 @@ public class Commits {
     public DetailedPerson author;
     public DetailedPerson committer;
 
-    public String[] toStringArray() {
-        return new String[]{sha==null?"":sha, author==null?"":author.login==null?"":author.login, committer==null?"":committer.login==null?"":committer.login};
+    public String[] toStringArray(String currentRepo) {
+        return new String[]{currentRepo, sha==null?"":sha, author==null?"":author.login==null?"":author.login, committer==null?"":committer.login==null?"":committer.login};
     }
 
 }
