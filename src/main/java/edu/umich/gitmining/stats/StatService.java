@@ -22,7 +22,6 @@ public class StatService {
     private final RestTemplate restTemplate;
 
     public StatService(RestTemplateBuilder restTemplateBuilder, @Value("${github.username:defaultUsername}") String gitUsername, @Value("${github.token:defaultToken}") String gitToken ) {
-        System.out.println("Github username for Rest Template: " + gitUsername);
         this.restTemplate = restTemplateBuilder
             .basicAuthentication(gitUsername, gitToken)
             .build();

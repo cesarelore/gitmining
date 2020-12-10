@@ -43,9 +43,9 @@ public class GitRestTestService {
         // TODO: use list instead of single URL
         List<String> urlList = new ArrayList<>();
         urlList.add("https://api.github.com/repos/plotly/dash");
-        urlList.add("https://api.github.com/repos/vpny/vpny");
+        urlList.add("https://api.github.com/repos/vnpy/vnpy");
         urlList.add("https://api.github.com/repos/waditu/tushare");
-        urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii ");
+        urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii");
         urlList.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
 
         Repo r;
@@ -55,6 +55,7 @@ public class GitRestTestService {
             contributorList = doContributorRestCall(url);
             commitsList = doCommitsRestCall(url);
             r = doRepoRestCall(url);
+            System.out.println();
 
             // Do something with the results here.
         }
@@ -70,7 +71,7 @@ public class GitRestTestService {
         System.out.println("URL: " + localTestUrl);
         ResponseEntity<Repo> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Repo.class);
         Repo repoResult = response.getBody();
-        System.out.println("Repo: " + repoResult.getName());
+        System.out.println("Repo: " + repoResult.getName() + ". Watchers: " + repoResult.getWatchers_count());
         return repoResult;
     }
     private List<Contributor> doContributorRestCall(String baseUrl) {
@@ -80,6 +81,7 @@ public class GitRestTestService {
         List<Contributor> contributorList = Arrays.asList(response.getBody());
 //        System.out.println("\n\nHEADERS\n" + response.getHeaders());
         System.out.println("Contributors Size: " + contributorList.size());
+        System.out.println("Contributors first element: " + contributorList.get(0));
         return contributorList;
     }
 
@@ -90,6 +92,8 @@ public class GitRestTestService {
         ResponseEntity<Commits[]> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Commits[].class); //must use restTemplate.exchange not restTemplate.getForEntity
         List<Commits> commitsList = Arrays.asList(response.getBody());
         System.out.println("Commits length: " + commitsList.size());
+        System.out.println("Commits first element: " + commitsList.get(0).toString());
+
         return commitsList;
     }
 }
