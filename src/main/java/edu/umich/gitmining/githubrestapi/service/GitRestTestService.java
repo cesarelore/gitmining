@@ -45,8 +45,13 @@ public class GitRestTestService {
 
         // TODO: use list instead of single URL
         List<String> urlList = new ArrayList<>();
-        urlList.add("https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100&page=1");
-        urlList.add("https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100&page=2");
+        urlList.add("https://api.github.com/repos/plotly/dash");
+        urlList.add("https://api.github.com/repos/vpny/vpny");
+        urlList.add("https://api.github.com/repos/waditu/tushare");
+        urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii ");
+        urlList.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
+//        urlList.add("https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100&page=1");
+//        urlList.add("https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100&page=2");
 
     }
 
