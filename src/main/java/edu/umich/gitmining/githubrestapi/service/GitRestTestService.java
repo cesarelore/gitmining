@@ -41,7 +41,7 @@ public class GitRestTestService {
         entity = new HttpEntity<>(headers);
         doContributorRestCall();
         doCommitsRestCall();
-        doRepoCall();
+        doRepoRestCall();
 
         // TODO: use list instead of single URL
         List<String> urlList = new ArrayList<>();
