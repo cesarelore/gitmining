@@ -42,4 +42,7 @@ public class Repo {
     public long getId() {
         return id;
     }
+    public String[] toStringArray() {
+        return new String[]{String.valueOf(id), name, String.valueOf(watchers_count), String.valueOf(stargazers_count)};
+    }
 }

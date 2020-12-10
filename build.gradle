@@ -16,6 +16,10 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/com.opencsv/opencsv
+	compile group: 'com.opencsv', name: 'opencsv', version: '5.3'
+
+
 }
 
 test {

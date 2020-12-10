@@ -19,4 +19,8 @@ public class Commit {
     public String url;
     public long comment_count;
     public Object verification;
+
+    public String toString() {
+        return "Commit(URL: " + url + ", message: " + message +").";
+    }
 }

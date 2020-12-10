@@ -1,5 +1,6 @@
 package edu.umich.gitmining.githubrestapi.service;
 
+import com.opencsv.CSVWriter;
 import edu.umich.gitmining.githubrestapi.model.Commits;
 import edu.umich.gitmining.githubrestapi.model.Contributor;
 import edu.umich.gitmining.githubrestapi.model.Repo;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,17 +50,31 @@ public class GitRestTestService {
         urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii");
         urlList.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
 
+        List<String[]> repoListForcsv = new ArrayList<>();
+        repoListForcsv.add(new String[]{"id", "name", "watcher_count", "star_count"});
         Repo r;
+        List<String[]> contributorListForcsv = new ArrayList<>();
         List<Contributor> contributorList;
+        List<String[]> commitsListForcsv = new ArrayList<>();
         List<Commits> commitsList;
         for (String url : urlList) {
             contributorList = doContributorRestCall(url);
+            for(Contributor c : contributorList) {
+                contributorListForcsv.add(c.toStringArray());
+            }
             commitsList = doCommitsRestCall(url);
+            for (Commits commits : commitsList) {
+                commitsListForcsv.add(commits.toStringArray());
+            }
             r = doRepoRestCall(url);
+            repoListForcsv.add(r.toStringArray());
             System.out.println();
 
-            // Do something with the results here.
         }
+        // Do something with the results here.
+        writeToCsv("repo.csv", repoListForcsv);
+        writeToCsv("contributor.csv", contributorListForcsv);
+        writeToCsv("commits.csv", commitsListForcsv);
 
 //        doContributorRestCall(testUrl);
 //        doCommitsRestCall(testUrl);
@@ -96,4 +112,20 @@ public class GitRestTestService {
 
         return commitsList;
     }
+
+    private void writeToCsv(String filename, List<String[]> it) {
+        FileWriter out = null;
+        try {
+            out = new FileWriter("C:\\Users\\admin\\Documents\\UofMDearborn\\CIS580-202009Fall-DataAnalyticsinSoftwareEngineering\\ProjectStep03\\" + filename);
+            CSVWriter writer = new CSVWriter(out);
+            writer.writeAll(it);
+
+            // closing writer connection
+            writer.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

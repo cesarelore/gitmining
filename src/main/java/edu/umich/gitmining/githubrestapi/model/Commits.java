@@ -18,4 +18,10 @@ public class Commits {
     public String comments_url;
     public DetailedPerson author;
     public DetailedPerson committer;
+
+    public String[] toStringArray() {
+        return new String[]{sha==null?"":sha, author==null?"":author.login==null?"":author.login, committer==null?"":committer.login==null?"":committer.login};
+    }
+
 }
+
