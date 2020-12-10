@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,8 +55,10 @@ public class GitRestTestService {
         repoListForcsv.add(new String[]{"id", "name", "watcher_count", "star_count"});
         Repo r;
         List<String[]> contributorListForcsv = new ArrayList<>();
+        contributorListForcsv.add(new String[]{"login", "contribution_count"});
         List<Contributor> contributorList;
         List<String[]> commitsListForcsv = new ArrayList<>();
+        commitsListForcsv.add(new String[]{"sha", "author", "committer"});
         List<Commits> commitsList;
         for (String url : urlList) {
             contributorList = doContributorRestCall(url);
@@ -114,13 +117,14 @@ public class GitRestTestService {
     }
 
     private void writeToCsv(String filename, List<String[]> it) {
-        FileWriter out = null;
+        String directory = "C:\\Users\\admin\\Documents\\UofMDearborn\\CIS580-202009Fall-DataAnalyticsinSoftwareEngineering\\ProjectStep03\\";
+        File f = new File(directory + filename);
+        f.delete();
+        FileWriter out;
         try {
-            out = new FileWriter("C:\\Users\\admin\\Documents\\UofMDearborn\\CIS580-202009Fall-DataAnalyticsinSoftwareEngineering\\ProjectStep03\\" + filename);
+            out = new FileWriter(directory + filename);
             CSVWriter writer = new CSVWriter(out);
             writer.writeAll(it);
-
-            // closing writer connection
             writer.close();
 
         } catch (Exception e) {
