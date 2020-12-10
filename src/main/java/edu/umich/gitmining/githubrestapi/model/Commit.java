@@ -21,6 +21,6 @@ public class Commit {
     public Object verification;
 
     public String toString() {
-        return "Commit(URL: " + url + ", message: " + message +").";
+        return "Commit(URL: " + url + ", author: " + author.name +", committer: " + committer.name==null?"":committer.name + ").";
     }
 }

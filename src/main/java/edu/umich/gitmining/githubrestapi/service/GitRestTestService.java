@@ -43,16 +43,16 @@ public class GitRestTestService {
         String testUrl;
         testUrl = "https://api.github.com/repos/" + GITHUB_ORG + "/" + GITHUB_REPO;
 
-        // TODO: use list instead of single URL
         List<String> urlList = new ArrayList<>();
         urlList.add("https://api.github.com/repos/plotly/dash");
         urlList.add("https://api.github.com/repos/vnpy/vnpy");
         urlList.add("https://api.github.com/repos/waditu/tushare");
         urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii");
         urlList.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
+        urlList.add("https://api.github.com/repos/signalapp/Signal-Server");
 
         List<String[]> repoListForcsv = new ArrayList<>();
-        repoListForcsv.add(new String[]{"id", "name", "watcher_count", "star_count"});
+        repoListForcsv.add(new String[]{"id", "name", "size", "watcher_count", "network_count", "subscribers_count"});
         Repo r;
         List<String[]> contributorListForcsv = new ArrayList<>();
         contributorListForcsv.add(new String[]{"repo", "login", "contribution_count"});
@@ -97,7 +97,7 @@ public class GitRestTestService {
         return repoResult;
     }
     private List<Contributor> doContributorRestCall(String baseUrl) {
-        String localTestUrl = baseUrl + "/contributors";
+        String localTestUrl = baseUrl + "/contributors?per_page=100";
         System.out.println("URL: " + localTestUrl);
         ResponseEntity<Contributor[]> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Contributor[].class);
         List<Contributor> contributorList = Arrays.asList(response.getBody());

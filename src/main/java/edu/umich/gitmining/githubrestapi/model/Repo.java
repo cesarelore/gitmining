@@ -3,7 +3,6 @@ package edu.umich.gitmining.githubrestapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
@@ -25,26 +24,15 @@ public class Repo {
     private long network_count;
     private long subscribers_count;
 
-    public String getName() {
-        return name;
-    }
-
-    public long getStargazers_count() {
-        return stargazers_count;
-    }
-
-    public long getWatchers_count() {
-        return watchers_count;
-    }
-
-    public DetailedPerson getOwner() {
-        return owner;
-    }
-
-    public long getId() {
-        return id;
-    }
     public String[] toStringArray() {
-        return new String[]{String.valueOf(id), name, String.valueOf(watchers_count), String.valueOf(stargazers_count)};
+        return new String[]{String.valueOf(id), name, String.valueOf(size), String.valueOf(watchers_count), String.valueOf(network_count), String.valueOf(subscribers_count)};
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getWatchers_count() {
+        return String.valueOf(this.watchers_count);
     }
 }
