@@ -1,8 +1,12 @@
 package edu.umich.gitmining.githubrestapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Commits {
     public String sha;
     public String node_id;
@@ -13,10 +17,6 @@ public class Commits {
     public DetailedPerson author;
     public DetailedPerson committer;
 
-
-    public Commits() {
-        // default constructor
-    }
     public String toString()
     {
         return sha + "\n " + url + "\n";

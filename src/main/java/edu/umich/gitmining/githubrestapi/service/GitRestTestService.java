@@ -2,6 +2,7 @@ package edu.umich.gitmining.githubrestapi.service;
 
 import edu.umich.gitmining.githubrestapi.model.Commits;
 import edu.umich.gitmining.githubrestapi.model.Contributor;
+import edu.umich.gitmining.githubrestapi.model.Repo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,9 @@ public class GitRestTestService {
     private HttpHeaders headers;
     private HttpEntity entity;
     private final String ACCEPT_HEADER = "application/vnd.github+json";
+    private final String GITHUB_ORG = "signalapp";
+    private final String GITHUB_REPO = "Signal-Server";
+    private String testUrl;
 
     @Value("${github.username:username-missing}")
     private String githubUsername;
@@ -28,6 +32,8 @@ public class GitRestTestService {
     private String githubToken;
 
     public void makeTestCall() {
+        testUrl = "https://api.github.com/repos/" + GITHUB_ORG + "/" + GITHUB_REPO;
+
         restTemplate = new RestTemplate();
         headers = new HttpHeaders();
         headers.set("Authorization", "token " + githubToken);
@@ -35,28 +41,39 @@ public class GitRestTestService {
         entity = new HttpEntity<>(headers);
         doContributorRestCall();
         doCommitsRestCall();
-    }
 
-    private void doContributorRestCall() {
-        String testUrl = "https://api.github.com/repos/signalapp/Signal-Server/stats/contributors";
-        ResponseEntity<Contributor[]> response = restTemplate.exchange(testUrl, HttpMethod.GET, entity, Contributor[].class);
-        List<Contributor> contributorList = Arrays.asList(response.getBody());
-//        System.out.println("\n\nHEADERS\n" + response.getHeaders());
-        System.out.println("Contributors Size: " + contributorList.size());
-    }
-
-    private void doCommitsRestCall() {
+        // TODO: use list instead of single URL
         List<String> urlList = new ArrayList<>();
         urlList.add("https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100&page=1");
         urlList.add("https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100&page=2");
 
-        String testUrl = "https://api.github.com/repos/signalapp/Signal-Server/commits?per_page=100";
-        ResponseEntity<Commits[]> response = restTemplate.exchange(testUrl, HttpMethod.GET, entity, Commits[].class); //must use restTemplate.exchange not restTemplate.getForEntity
-        Commits[] commitArray = response.getBody();
-        List<Commits> commitsList = Arrays.asList(commitArray);
-//        System.out.println("\n\nHEADERS\n" + response.getHeaders());
-        System.out.println("Commits length: " + commitArray.length + " " + commitsList.size());
-//        System.out.println(response.getBody()[0].toString());
     }
 
+    private Repo doRepoCall() {
+        String localTestUrl = testUrl;
+        System.out.println("URL: " + localTestUrl);
+        ResponseEntity<Repo> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Repo.class);
+        Repo repoResult = response.getBody();
+        System.out.println("Repo: " + repoResult.getName());
+        return repoResult;
+    }
+    private List<Contributor> doContributorRestCall() {
+        String localTestUrl = testUrl + "/stats/contributors";
+        System.out.println("URL: " + localTestUrl);
+        ResponseEntity<Contributor[]> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Contributor[].class);
+        List<Contributor> contributorList = Arrays.asList(response.getBody());
+//        System.out.println("\n\nHEADERS\n" + response.getHeaders());
+        System.out.println("Contributors Size: " + contributorList.size());
+        return contributorList;
+    }
+
+    private List<Commits> doCommitsRestCall() {
+        String localTestUrl = testUrl + "/commits?per_page=100";
+        System.out.println("URL: " + localTestUrl);
+
+        ResponseEntity<Commits[]> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Commits[].class); //must use restTemplate.exchange not restTemplate.getForEntity
+        List<Commits> commitsList = Arrays.asList(response.getBody());
+        System.out.println("Commits length: " + commitsList.size());
+        return commitsList;
+    }
 }
