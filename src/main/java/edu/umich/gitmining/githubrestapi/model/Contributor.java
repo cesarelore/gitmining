@@ -12,5 +12,5 @@ public class Contributor {
     public long id;
     public String node_id;
     public String type;
-    public Long contributions;
+    public long contributions;
 }

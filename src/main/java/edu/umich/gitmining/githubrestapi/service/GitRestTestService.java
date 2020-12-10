@@ -41,6 +41,7 @@ public class GitRestTestService {
         entity = new HttpEntity<>(headers);
         doContributorRestCall();
         doCommitsRestCall();
+        doRepoCall();
 
         // TODO: use list instead of single URL
         List<String> urlList = new ArrayList<>();
@@ -49,7 +50,7 @@ public class GitRestTestService {
 
     }
 
-    private Repo doRepoCall() {
+    private Repo doRepoRestCall() {
         String localTestUrl = testUrl;
         System.out.println("URL: " + localTestUrl);
         ResponseEntity<Repo> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Repo.class);
@@ -58,7 +59,7 @@ public class GitRestTestService {
         return repoResult;
     }
     private List<Contributor> doContributorRestCall() {
-        String localTestUrl = testUrl + "/stats/contributors";
+        String localTestUrl = testUrl + "/contributors";
         System.out.println("URL: " + localTestUrl);
         ResponseEntity<Contributor[]> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, Contributor[].class);
         List<Contributor> contributorList = Arrays.asList(response.getBody());
