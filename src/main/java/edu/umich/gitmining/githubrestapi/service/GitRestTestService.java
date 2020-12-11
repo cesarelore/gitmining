@@ -43,13 +43,26 @@ public class GitRestTestService {
         String testUrl;
         testUrl = "https://api.github.com/repos/" + GITHUB_ORG + "/" + GITHUB_REPO;
 
+//        List<String> urlList = new ArrayList<>();
+//        urlList.add("https://api.github.com/repos/plotly/dash");
+//        urlList.add("https://api.github.com/repos/vnpy/vnpy");
+//        urlList.add("https://api.github.com/repos/waditu/tushare");
+//        urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii");
+//        urlList.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
+//        urlList.add("https://api.github.com/repos/signalapp/Signal-Server");
+
         List<String> urlList = new ArrayList<>();
-        urlList.add("https://api.github.com/repos/plotly/dash");
-        urlList.add("https://api.github.com/repos/vnpy/vnpy");
-        urlList.add("https://api.github.com/repos/waditu/tushare");
-        urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii");
-        urlList.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
-        urlList.add("https://api.github.com/repos/signalapp/Signal-Server");
+        urlList.add("https://api.github.com/repos/microsoft/vscode");
+        urlList.add("https://api.github.com/repos/microsoftdocs/azure-docs");
+        urlList.add("https://api.github.com/repos/flutter/flutter");
+        urlList.add("https://api.github.com/repos/firstcontributions/first-contributions");
+        urlList.add("https://api.github.com/repos/tensorflow/tensorflow");
+        urlList.add("https://api.github.com/repos/facebook/react-native");
+        urlList.add("https://api.github.com/repos/kubernetes/kubernetes");
+        urlList.add("https://api.github.com/repos/definitelytyped/definitelytyped");
+        urlList.add("https://api.github.com/repos/ansible/ansible");
+        urlList.add("https://api.github.com/repos/home-assistant/home-assistant");
+
 
         List<String[]> repoListForcsv = new ArrayList<>();
         repoListForcsv.add(new String[]{"id", "name", "size", "watcher_count", "network_count", "subscribers_count"});
