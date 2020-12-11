@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class GitRestTestService {
+public class GitRestService {
     private RestTemplate restTemplate;
     private HttpHeaders headers;
     private HttpEntity entity;

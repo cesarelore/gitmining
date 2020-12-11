@@ -2,7 +2,7 @@ package edu.umich.gitmining.stats;
 
 import java.util.List;
 
-import edu.umich.gitmining.githubrestapi.service.GitRestTestService;
+import edu.umich.gitmining.githubrestapi.service.GitRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +15,7 @@ public class StatController {
     private StatService statService;
 
     @Autowired
-    GitRestTestService gitRestTestService;
+    GitRestService gitRestService;
 
     @Autowired
     public StatController(StatService statService) {
@@ -32,6 +32,6 @@ public class StatController {
     // http://localhost:8080/stats/doit
     @GetMapping("/doit")
     public void doIt() {
-        this.gitRestTestService.makeTestCall();
+        this.gitRestService.makeTestCall();
     }
 }
