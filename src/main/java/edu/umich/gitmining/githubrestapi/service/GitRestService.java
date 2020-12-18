@@ -4,6 +4,8 @@ import com.opencsv.CSVWriter;
 import edu.umich.gitmining.githubrestapi.model.Commits;
 import edu.umich.gitmining.githubrestapi.model.Contributor;
 import edu.umich.gitmining.githubrestapi.model.Repo;
+import edu.umich.gitmining.githubrestapi.model.StatsContributors;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +35,7 @@ public class GitRestService {
     @Value("${github.token:token-missing}")
     private String githubToken;
 
-    public void makeTestCall() {
+    public void createCsv() {
         restTemplate = new RestTemplate();
         headers = new HttpHeaders();
         headers.set("Authorization", "token " + githubToken);
@@ -43,19 +45,18 @@ public class GitRestService {
         String testUrl;
         testUrl = "https://api.github.com/repos/" + GITHUB_ORG + "/" + GITHUB_REPO;
 
-//        List<String> urlList = new ArrayList<>();
-//        urlList.add("https://api.github.com/repos/plotly/dash");
-//        urlList.add("https://api.github.com/repos/vnpy/vnpy");
-//        urlList.add("https://api.github.com/repos/waditu/tushare");
-//        urlList.add("https://api.github.com/repos/firefly-iii/firefly-iii");
-//        urlList.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
-//        urlList.add("https://api.github.com/repos/signalapp/Signal-Server");
+        List<String> urlListFinance = new ArrayList<>();
+        urlListFinance.add("https://api.github.com/repos/plotly/dash");
+        urlListFinance.add("https://api.github.com/repos/vnpy/vnpy");
+        urlListFinance.add("https://api.github.com/repos/waditu/tushare");
+        urlListFinance.add("https://api.github.com/repos/firefly-iii/firefly-iii");
+        urlListFinance.add("https://api.github.com/repos/wilsonfreitas/awesome-quant");
+        urlListFinance.add("https://api.github.com/repos/signalapp/Signal-Server");
 
         List<String> urlList = new ArrayList<>();
         urlList.add("https://api.github.com/repos/microsoft/vscode");
         urlList.add("https://api.github.com/repos/microsoftdocs/azure-docs");
         urlList.add("https://api.github.com/repos/flutter/flutter");
-        urlList.add("https://api.github.com/repos/firstcontributions/first-contributions");
         urlList.add("https://api.github.com/repos/tensorflow/tensorflow");
         urlList.add("https://api.github.com/repos/facebook/react-native");
         urlList.add("https://api.github.com/repos/kubernetes/kubernetes");
@@ -67,12 +68,19 @@ public class GitRestService {
         List<String[]> repoListForcsv = new ArrayList<>();
         repoListForcsv.add(new String[]{"id", "name", "size", "watcher_count", "network_count", "subscribers_count"});
         Repo r;
+
         List<String[]> contributorListForcsv = new ArrayList<>();
         contributorListForcsv.add(new String[]{"repo", "login", "contribution_count"});
         List<Contributor> contributorList;
+
         List<String[]> commitsListForcsv = new ArrayList<>();
         commitsListForcsv.add(new String[]{"repo", "sha", "author", "committer"});
         List<Commits> commitsList;
+
+        List<String[]> statsContribListForcsv = new ArrayList();
+        statsContribListForcsv.add(new String[]{"repo", "author", "total", "week_Unix_Time", "additions", "deletions", "commits"});
+        List<StatsContributors> statsContributorsList;
+
         for (String url : urlList) {
             r = doRepoRestCall(url);
             repoListForcsv.add(r.toStringArray());
@@ -85,20 +93,19 @@ public class GitRestService {
             for (Commits commits : commitsList) {
                 commitsListForcsv.add(commits.toStringArray(r.getName()));
             }
+            statsContributorsList = doStatsContributorsRestCall(url);
+            for (StatsContributors sc : statsContributorsList) {
+                statsContribListForcsv.addAll(sc.prepareForCsv(r.getName()));
+            }
 
             System.out.println();
 
         }
-        // Do something with the results here.
         writeToCsv("repo.csv", repoListForcsv);
         writeToCsv("contributor.csv", contributorListForcsv);
         writeToCsv("commits.csv", commitsListForcsv);
+        writeToCsv("statsContributors.csv", statsContribListForcsv);
         System.out.println("\n\nDONE");
-
-//        doContributorRestCall(testUrl);
-//        doCommitsRestCall(testUrl);
-//        doRepoRestCall(testUrl);
-
     }
 
     private Repo doRepoRestCall(String baseUrl) {
@@ -132,6 +139,16 @@ public class GitRestService {
         return commitsList;
     }
 
+    private List<StatsContributors> doStatsContributorsRestCall(String baseUrl) {
+        String localTestUrl = baseUrl + "/stats/contributors";
+        System.out.println("URL: " + localTestUrl);
+        ResponseEntity<StatsContributors[]> response = restTemplate.exchange(localTestUrl, HttpMethod.GET, entity, StatsContributors[].class);
+        List<StatsContributors> statsContributorsList = Arrays.asList(response.getBody());
+        System.out.println("StatsContrib length: " + statsContributorsList.size());
+        System.out.println("StatsContrib first element: Total=" + statsContributorsList.get(0).getTotal() + ". Weeks Array length:" + statsContributorsList.get(0).getWeeks().length);
+        return statsContributorsList;
+    }
+
     private void writeToCsv(String filename, List<String[]> it) {
         String directory = "C:\\Users\\admin\\Documents\\UofMDearborn\\CIS580-202009Fall-DataAnalyticsinSoftwareEngineering\\ProjectStep03\\";
         File f = new File(directory + filename);
@@ -147,5 +164,4 @@ public class GitRestService {
             e.printStackTrace();
         }
     }
-
 }

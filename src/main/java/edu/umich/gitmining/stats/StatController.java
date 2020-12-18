@@ -28,10 +28,4 @@ public class StatController {
 
         return this.statService.getStats(repoData);
     }
-
-    // http://localhost:8080/stats/doit
-    @GetMapping("/doit")
-    public void doIt() {
-        this.gitRestService.makeTestCall();
-    }
 }
