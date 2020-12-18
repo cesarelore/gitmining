@@ -14,9 +14,4 @@ public class Week {
     private long a;
     private long d;
     private long c;
-
-    public String toThing() {
-        return String.valueOf(this.w);
-    }
-
 }

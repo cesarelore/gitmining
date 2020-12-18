@@ -93,10 +93,10 @@ public class GitRestService {
             for (Commits commits : commitsList) {
                 commitsListForcsv.add(commits.toStringArray(r.getName()));
             }
-            statsContributorsList = doStatsContributorsRestCall(url);
-            for (StatsContributors sc : statsContributorsList) {
-                statsContribListForcsv.addAll(sc.prepareForCsv(r.getName()));
-            }
+//            statsContributorsList = doStatsContributorsRestCall(url);
+//            for (StatsContributors sc : statsContributorsList) {
+//                statsContribListForcsv.addAll(sc.prepareForCsv(r.getName()));
+//            }
 
             System.out.println();
 
@@ -104,7 +104,7 @@ public class GitRestService {
         writeToCsv("repo.csv", repoListForcsv);
         writeToCsv("contributor.csv", contributorListForcsv);
         writeToCsv("commits.csv", commitsListForcsv);
-        writeToCsv("statsContributors.csv", statsContribListForcsv);
+//        writeToCsv("statsContributors.csv", statsContribListForcsv);
         System.out.println("\n\nDONE");
     }
 

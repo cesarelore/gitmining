@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StatsContributors {
-    private String total;
+    private Long total;
     private Week[] weeks;
     private DetailedPerson author;
 
@@ -23,7 +23,7 @@ public class StatsContributors {
             tempList.add(new String[]{
                     repoName,
                     author==null?"":author.login==null?"":author.login,
-                    total,
+                    String.valueOf(total),
                     String.valueOf(weeks[i].getW()),
                     String.valueOf(weeks[i].getA()),
                     String.valueOf(weeks[i].getD()),
